@@ -1,0 +1,100 @@
+1a. SELECT A.first_name, A.last_name
+    FROM ACTOR A;
+1b. SELECT concat(A.first_name, '  ', A.last_name) AS 'Actor Name'
+    FROM Actor A;
+2a. SELECT A.actor_id, A.first_name, A.last_name
+    FROM ACTOR A
+    WHERE A.first_name = "JOE";
+2b. SELECT A.actor_id, A.last_name, A.first_name
+    FROM ACTOR A
+    WHERE A.last_name LIKE "%GEN%";
+2c. SELECT A.actor_id, A.last_name, A.first_name
+    FROM ACTOR A
+    WHERE A.last_name LIKE "%LI%"
+    ORDER BY A.last_name ASC;
+2d. SELECT C.country_id, C.country
+    FROM country C
+    WHERE C.country IN ("Afghanistan", "Bangladesh", "China");
+3a. ALTER TABLE ACTOR ADD middle_name VARCHAR(30) NULL;
+3b. ALTER TABLE ACTOR MODIFY  middle_name  blob;
+3c. ALTER TABLE ACTOR DROP middle_name;
+4a. SELECT DISTINCT a.last_name, COUNT(a.last_name)
+    FROM ACTOR A
+    GROUP BY a.last_name;
+4b. SELECT DISTINCT a.last_name, COUNT(a.last_name)
+    FROM ACTOR A
+    GROUP BY a.last_name
+    HAVING COUNT(a.last_name) > 2;
+4c. UPDATE ACTOR SET first_name = 'HARPO'
+    WHERE last_name = 'WILLIAMS';
+4d. UPDATE ACTOR SET first_name = 'MUCHO GROUCHO'
+    WHERE last_name = 'WILLIAMS'
+    AND actor_id = '72';
+5a. SELECT * FROM INFORMATION_SCHEMA.SCHEMATA;
+6a. SELECT s.first_name, s.last_name, a.address
+    FROM address a, staff s;
+6b. SELECT s.staff_id, s.first_name, s.last_name, p.amount, p.payment_date, SUM(p.amount) "Sum Total"
+    FROM staff s
+    LEFT JOIN payment p
+    ON s.staff_id = p.staff_id
+    WHERE p.payment_date BETWEEN '2005-08-01 00:00:00' and '2005-08-31 00:00:00'
+    GROUP BY s.staff_id, s.first_name, s.last_name;
+6c. SELECT DISTINCT f.title, COUNT(fa.actor_id)
+    FROM film f
+    INNER JOIN film_actor fa
+    ON f.film_id = fa.film_id;
+6d. SELECT f.title, sum(i.store_id) "In Inventory"
+    FROM film f, inventory i
+    WHERE f.title = 'Hunchback Impossible'
+    AND i.film_id = '439';
+6e. SELECT C.last_name, C.first_name, p.amount
+    FROM customer C, payment p;
+    GROUP BY C.last_name;
+7a. SELECT f.title FROM film f
+    WHERE f.title IN
+    (
+    SELECT f.title
+    FROM film f
+    WHERE f.title LIKE 'K%' OR 'Q%'
+    )
+7b. Select a.first_name, a.last_name, f.title from film F
+    INNER JOIN film_actor fa
+    ON  f.film_id = fa.film_id
+    INNER JOIN actor a
+    ON fa.actor_id = a.actor_id
+    WHERE f.title = 'Alone Trip';
+7c. SELECT CL.name, CL.country, C.email
+    FROM CUSTOMER_LIST CL, CUSTOMER C
+    WHERE CL.country = "Canada";
+7d. SELECT * FROM nicer_but_slower_film_list
+    WHERE category = 'family';
+7e. SELECT * FROM FILM
+    ORDER BY length desc;
+7f. SELECT sbs.store, sbs.total_sales
+    FROM sales_by_store sbs;
+7g. SELECT DISTINCT S.store_id, C.city, ct.country
+    FROM store S, city C, country ct;
+7h. SELECT C.name, SUM(P.amount)
+    FROM category C
+    LEFT JOIN film_category FC
+    ON C.category_id = FC.category_id
+    LEFT JOIN inventory I
+    ON FC.film_id = I.film_id
+    LEFT JOIN rental R
+    ON I.inventory_id = R.inventory_id
+    LEFT JOIN payment P
+    ON R.rental_id = P.rental_id
+    GROUP BY C.name;
+8a. SELECT C.name AS "TOP_5_GENRES", SUM(P.amount)
+    FROM category C
+    LEFT JOIN film_category FC
+    ON C.category_id = FC.category_id
+    LEFT JOIN inventory I
+    ON FC.film_id = I.film_id
+    LEFT JOIN rental R
+    ON I.inventory_id = R.inventory_id
+    LEFT JOIN payment P
+    ON R.rental_id = P.rental_id
+    GROUP BY C.name;
+8b. SELECT * FROM TOP_5_GENRES
+8c. DROP VIEW TOP_5_GENRES
